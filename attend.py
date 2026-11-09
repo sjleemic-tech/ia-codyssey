@@ -1,99 +1,63 @@
-#!/usr/bin/env python3
-"""
-Simple attendance recorder (no external libraries)
-
-Usage examples:
-  python attend.py add --name "홍길동" --date 2026-11-02
-  python attend.py add --name "김철수"        # date omitted -> today
-  python attend.py list
-
-This program stores records in attendance.csv (columns: date,name).
-Date format: YYYY-MM-DD
-"""
-import argparse
-import csv
-import datetime
+import json
 import os
-import sys
 
-FNAME = "attendance.csv"
-HEADER = ["date", "name"]
+# 데이터 파일 이름
+DATA_FILE = "attendance.json"
 
-def ensure_file():
-    """If CSV doesn't exist, create it with header."""
-    if not os.path.exists(FNAME):
-        with open(FNAME, "w", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow(HEADER)
+def load_data():
+    """파일에서 출석 데이터를 불러옵니다."""
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
 
-def validate_date(date_str):
-    """Validate YYYY-MM-DD. Raise ValueError if invalid."""
-    try:
-        return datetime.date.fromisoformat(date_str).isoformat()
-    except Exception:
-        raise ValueError("날짜 형식은 YYYY-MM-DD 이어야 합니다. 예: 2026-11-02")
+def save_data(data):
+    """출석 데이터를 파일에 저장합니다."""
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
 
-def add_entry(name, date_str=None):
-    """Append one attendance record to CSV."""
-    if not name:
-        raise ValueError("이름은 비워둘 수 없습니다.")
-    if date_str:
-        date_iso = validate_date(date_str)
+def add_attendance(data):
+    """새로운 출석 기록을 추가합니다."""
+    date = input("날짜를 입력하세요 (예: 2023-10-27): ")
+    name = input("이름을 입력하세요: ")
+    
+    record = {"date": date, "name": name}
+    data.append(record)
+    save_data(data)
+    print(f"\n✅ {name}님의 출석이 완료되었습니다!")
+
+def view_attendance(data):
+    """전체 출석 목록을 출력합니다."""
+    print("\n--- [출석 목록] ---")
+    if not data:
+        print("기록이 없습니다.")
     else:
-        date_iso = datetime.date.today().isoformat()
-    ensure_file()
-    with open(FNAME, "a", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow([date_iso, name])
-    print(f"Added: {date_iso}  -  {name}")
+        # 날짜순으로 정렬하여 보여주기
+        sorted_data = sorted(data, key=lambda x: x['date'])
+        for record in sorted_data:
+            print(f"[{record['date']}] {record['name']}")
+    print("------------------")
 
-def read_entries():
-    """Return list of dicts from CSV (empty list if no file)."""
-    if not os.path.exists(FNAME):
-        return []
-    with open(FNAME, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        return list(reader)
-
-def list_entries():
-    """Print all records (sorted by date then name)."""
-    entries = read_entries()
-    if not entries:
-        print("No records.")
-        return
-    # try to sort by date then name for nicer display
-    try:
-        entries.sort(key=lambda e: (e["date"], e["name"]))
-    except KeyError:
-        pass
-    print("date\t\tname")
-    print("-" * 30)
-    for e in entries:
-        print(f"{e.get('date','')}\t{e.get('name','')}")
-
-def parse_args(argv):
-    p = argparse.ArgumentParser(description="Attendance CLI")
-    sub = p.add_subparsers(dest="cmd", required=True)
-
-    a = sub.add_parser("add", help="Add attendance record")
-    a.add_argument("--name", "-n", required=True, help="Name (e.g. '홍길동')")
-    a.add_argument("--date", "-d", required=False, help="Date YYYY-MM-DD (omit for today)")
-
-    sub.add_parser("list", help="List all attendance records")
-
-    return p.parse_args(argv)
-
-def main(argv):
-    args = parse_args(argv)
-    try:
-        if args.cmd == "add":
-            add_entry(args.name.strip(), args.date)
-        elif args.cmd == "list":
-            list_entries()
-    except ValueError as e:
-        print("Error:", e)
-        return 1
-    return 0
+def main():
+    attendance_data = load_data()
+    
+    while True:
+        print("\n📖 스터디 출석 관리 프로그램")
+        print("1. 출석 체크")
+        print("2. 출석 명단 보기")
+        print("3. 종료")
+        
+        choice = input("원하는 메뉴 번호를 선택하세요: ")
+        
+        if choice == "1":
+            add_attendance(attendance_data)
+        elif choice == "2":
+            view_attendance(attendance_data)
+        elif choice == "3":
+            print("프로그램을 종료합니다. 열공하세요! 💪")
+            break
+        else:
+            print("잘못된 입력입니다. 다시 선택해주세요.")
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    main()
