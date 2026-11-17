@@ -44,6 +44,8 @@ Get-CimInstance Win32_Processor | Select VirtualizationFirmwareEnabled
 Get-CimInstance Win32_ComputerSystem | Select HypervisorPresent
 ```
 
+출력 스크린샷 참조: ![alt text](image.png)
+
 ✅ **확인**: 하나라도 `True` → 다음 진행
 ❌ **둘 다 False** → BIOS에서 Intel VT-x / AMD SVM 켜기
 
@@ -63,6 +65,9 @@ wsl --install
 > wsl --install -d Ubuntu
 > ```
 
+
+출력 스크린샷 참조: ![alt text](image-1.png) 
+
 ---
 
 ### 0-3. Linux 사용자 만들기 (Ubuntu 첫 실행)
@@ -73,6 +78,9 @@ wsl --install
 ```
 
 ✅ **확인**: 프롬프트가 `사용자명@컴퓨터명:~$` 로 바뀌면 성공!
+
+
+출력 스크린샷 참조: ![alt text](image-2.png)
 
 ---
 
@@ -85,7 +93,10 @@ wsl --update     # WSL 커널 최신화
 ```
 
 ✅ **확인**: VERSION 칸이 `2` 면 완료!
-e
+
+
+출력 스크린샷 참조 : ![alt text](image-3.png)
+
 ---
 
 ## 1단계. 기본 준비
@@ -101,6 +112,9 @@ sudo apt update && sudo apt upgrade -y
 
 ✅ **확인**: 오류 없이 완료되면 OK
 > 💡 비밀번호 입력 시 화면에 안 보이는 건 정상임
+
+출력 스크린샷 참조 : ![alt text](image-4.png)
+
 ---
 
 ### 1-2. 필수 도구 설치
@@ -114,6 +128,8 @@ sudo apt install -y build-essential curl wget git unzip
 git --version
 curl --version
 ```
+
+출력 스크린샷 참조 :  ![alt text](image-5.png) ![alt text](image-6.png)
 
 ---
 
@@ -133,11 +149,14 @@ pwd                           # 현재 위치 확인
 > ❌ Permission denied 떴다면?
 > 폴더 이름 앞에 `/` 붙이지 마세요! (`mkdir /myapp` ✗ → `mkdir myapp` ✅)
 
+
+출력 스크린샷 참조 : ![alt text](image-7.png)
+
 ---
 
 ## 2단계. Git · GitHub 설정
 
-> 💡 내 커밋에 이름표를 붙이는 단계예요!
+> 💡 내 커밋에 이름표를 붙이는 단계임
 > ⚠️ 실행 위치: **Ubuntu 터미널**
 
 ### 2-1. Git 사용자 설정
@@ -152,6 +171,8 @@ git config --global init.defaultBranch main
 ```bash
 git config --global --list
 ```
+
+출력 스크린샷 참조 : ![alt text](image-8.png)
 
 ---
 
@@ -170,6 +191,8 @@ gh auth status    # 로그인됨 표시 확인
 > 💡 `gh auth login` 에서 **HTTPS + 브라우저로 인증** 선택이 가장 쉬움
 ---
 
+출력 스크린샷 참조 : ![alt text](image-9.png) ![alt text](image-10.png) ![alt text](image-11.png)
+
 ## 3단계. 작업 디렉토리 생성 + 터미널 기본 조작
 
 > 💡 파일과 폴더를 다루는 기본 명령어 연습
@@ -186,6 +209,9 @@ ls -Force
 ```
 
 ✅ **확인**: `pwd` 로 현재 위치, `ls` 로 파일 목록 확인
+
+
+출력 스크린샷 참조 :  ![alt text](image-12.png)
 
 ---
 
@@ -209,6 +235,9 @@ touch empty.txt                  # 빈 파일 생성
 
 ---
 
+
+출력 스크린샷 참조 : ![alt text](image-13.png)
+
 ## 4단계. 권한 실습
 
 > 💡 파일에 자물쇠(권한)를 거는 연습임
@@ -230,6 +259,8 @@ ls -l                  # 변경된 권한 확인
 
 ---
 
+출력 스크린샷 참조 : ![alt text](image-14.png)
+
 ## 5단계. Docker 설치 및 동작 확인
 
 > 💡 Docker를 설치하고 WSL과 연결하는 단계예요!
@@ -246,6 +277,8 @@ winget install -e --id Docker.DockerDesktop
 
 ✅ **확인**: Docker Desktop 실행 → 좌하단 고래 아이콘이 초록색
 
+출력 스크린샷 참조 : ![alt text](image-15.png) 
+
 ---
 
 ### 5-2. WSL2 통합 설정 (Docker Desktop)
@@ -258,6 +291,9 @@ Docker Desktop → Settings(⚙️)
 → Ubuntu 토글 → ON
 → Apply & Restart
 ```
+
+
+출력 스크린샷 참조 : ![alt text](image-16.png)
 
 ---
 
@@ -277,6 +313,8 @@ docker info
 > # Ubuntu 터미널 닫았다가 다시 열기
 > ```
 
+출력 스크린샷 참조 : ![alt text](image-17.png) ![alt text](image-18.png)
+
 ---
 
 ## 6단계. 기본 컨테이너 실습
@@ -292,6 +330,9 @@ docker run hello-world
 
 ✅ **확인**: `Hello from Docker!` 메시지 보이면 성공!
 
+
+출력 스크린샷 참조 : ![alt text](image-19.png) 
+
 ---
 
 ### 6-2. Ubuntu 컨테이너 실행
@@ -305,6 +346,8 @@ exit                          # 컨테이너 나오기
 
 ---
 
+출력 스크린샷 참조 : ![alt text](image-20.png)
+
 ### 6-3. 컨테이너 상태 확인
 
 ```bash
@@ -312,6 +355,8 @@ docker ps        # 현재 실행 중인 컨테이너
 docker ps -a     # 종료된 것 포함 전체 목록
 docker images    # 내려받은 이미지 목록
 ```
+
+출력 스크린샷 참조 : ![alt text](image-21.png)
 
 ---
 
@@ -336,7 +381,7 @@ docker images    # 내려받은 이미지 목록
 cd ~/projects/dev-workstation
 mkdir -p app
 ```
-
+출력 스크린샷 참조 : ![alt text](image-22.png)
 ---
 
 ### 7-1. app/index.html 파일 만들기
@@ -353,6 +398,8 @@ cat > app/index.html << 'EOF'
 EOF
 ```
 
+출력 스크린샷 참조 : ![alt text](image-23.png)
+
 ---
 
 ### 7-2. Dockerfile 만들기
@@ -364,6 +411,8 @@ COPY app/index.html /usr/share/nginx/html/index.html
 EOF
 ```
 
+출력 스크린샷 참조 : ![alt text](image-24.png)
+
 ---
 
 ### 7-3. 빌드 & 실행
@@ -372,6 +421,8 @@ EOF
 docker build -t my-web .
 docker run -d --name my-web -p 8080:80 my-web
 ```
+
+출력 스크린샷 참조 : ![alt text](image-25.png)
 
 ---
 
@@ -383,6 +434,8 @@ http://localhost:8080
 ```
 
 ✅ **확인**: `Docker 웹서버 테스트` 글자 보이면 성공!
+
+출력 스크린샷 참조 :  ![alt text](image-26.png)
 
 ---
 
@@ -411,6 +464,8 @@ markdown
 > 내 컴퓨터 8080 ←→ 컨테이너 안 80
 > 브라우저가 8080으로 접속하면 → 컨테이너 nginx가 응답함
 
+출력 스크린샷 참조 : ![alt text](image-27.png) 
+
 ---
 
 ## 9단계. 바인드 마운트 확인
@@ -425,6 +480,8 @@ markdown
 docker stop my-web
 docker rm my-web
 ```
+
+출력 스크린샷 참조 : ![alt text](image-32.png)
 
 ---
 
@@ -443,6 +500,8 @@ docker run -d --name my-web \
 브라우저 → http://localhost:8080
 출력: Docker 웹서버 테스트
 ```
+
+출력 스크린샷 참조 : ![alt text](image-31.png)
 
 ---
 
@@ -467,6 +526,8 @@ EOF
 > 💡 바인드 마운트란?
 > 내 폴더(~/projects/.../app) 와 컨테이너 폴더가 실시간 연결!
 > 컨테이너를 재시작 안 해도 파일 수정이 바로 반영됨
+
+출력 스크린샷 참조 : ![alt text](image-30.png)
 
 ---
 
